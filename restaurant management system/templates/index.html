@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Restaurant Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Welcome to Restaurant Management System</h1>
+        <p class="lead">A comprehensive solution for managing your restaurant operations</p>
+        <hr class="my-4">
+        <p>Efficiently manage orders, tables, menu items, inventory, and customer information.</p>
+        <div class="mt-4">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <i class="fas fa-utensils fa-3x mb-3"></i>
+                    <h3 class="card-title">Menu Management</h3>
+                    <p class="card-text">Create and manage your restaurant's menu items with ease.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <i class="fas fa-chair fa-3x mb-3"></i>
+                    <h3 class="card-title">Table Management</h3>
+                    <p class="card-text">Track table availability and manage reservations efficiently.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                    <h3 class="card-title">Order Processing</h3>
+                    <p class="card-text">Take and process orders quickly and accurately.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

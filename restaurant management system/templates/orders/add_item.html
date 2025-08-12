@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Add Item to Order #{{ order.id }} - Restaurant Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Add Item to Order #{{ order.id }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.menu_item_id.label(class="form-label") }}
+                                {{ form.menu_item_id(class="form-select" + (" is-invalid" if form.menu_item_id.errors else "")) }}
+                                {% for error in form.menu_item_id.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.quantity.label(class="form-label") }}
+                                {{ form.quantity(class="form-control" + (" is-invalid" if form.quantity.errors else "")) }}
+                                {% for error in form.quantity.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.notes.label(class="form-label") }}
+                            {{ form.notes(class="form-control" + (" is-invalid" if form.notes.errors else ""), rows=2) }}
+                            {% for error in form.notes.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('order_items', order_id=order.id) }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Order
+                            </a>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

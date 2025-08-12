@@ -1,0 +1,85 @@
+/* Custom styles for Restaurant Management System */
+
+/* Dashboard cards */
+.card-dashboard {
+    transition: transform 0.3s;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Table status colors */
+.table-available {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-color: #28a745;
+}
+
+.table-occupied {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: #dc3545;
+}
+
+.table-reserved {
+    background-color: rgba(255, 193, 7, 0.1);
+    border-color: #ffc107;
+}
+
+/* Order status badges */
+.badge-in-progress {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-completed {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-cancelled {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Menu item cards */
+.menu-item-card {
+    transition: all 0.3s;
+    height: 100%;
+}
+
+.menu-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.menu-item-image {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Custom form styling */
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Login and registration pages */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+    }
+    
+    .content {
+        padding: 10px;
+    }
+}

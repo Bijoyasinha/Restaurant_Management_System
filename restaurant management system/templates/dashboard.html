@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Restaurant Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4">Dashboard</h2>
+    
+    <div class="row">
+        <!-- Orders Summary -->
+        <div class="col-md-3 mb-4">
+            <div class="card card-dashboard h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Total Orders</h6>
+                            <h3>{{ stats.total_orders }}</h3>
+                        </div>
+                        <div class="bg-primary bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-shopping-cart text-primary fa-2x"></i>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted">{{ stats.active_orders }} active orders</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Revenue Summary -->
+        <div class="col-md-3 mb-4">
+            <div class="card card-dashboard h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Today's Revenue</h6>
+                            <h3>${{ stats.today_revenue }}</h3>
+                        </div>
+                        <div class="bg-success bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-dollar-sign text-success fa-2x"></i>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted">{{ stats.revenue_change }}% from yesterday</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Customers Summary -->
+        <div class="col-md-3 mb-4">
+            <div class="card card-dashboard h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Total Customers</h6>
+                            <h3>{{ stats.total_customers }}</h3>
+                        </div>
+                        <div class="bg-info bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-users text-info fa-2x"></i>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted">{{ stats.new_customers }} new this week</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tables Summary -->
+        <div class="col-md-3 mb-4">
+            <div class="card card-dashboard h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted">Available Tables</h6>
+                            <h3>{{ stats.available_tables }}/{{ stats.total_tables }}</h3>
+                        </div>
+                        <div class="bg-warning bg-opacity-25 p-3 rounded">
+                            <i class="fas fa-chair text-warning fa-2x"></i>
+                        </div>
+                    </div>
+                    <p class="mt-3 mb-0 text-muted">{{ stats.occupied_tables }} currently occupied</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Recent Orders -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Recent Orders</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Table</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.customer.name if order.customer else 'Walk-in' }}</td>
+                                    <td>Table {{ order.table.table_number }}</td>
+                                    <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                                    <td>
+                                        {% if order.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif order.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif order.status == 'preparing' %}
+                                            <span class="badge bg-info">Preparing</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ order.status.title() }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">No recent orders</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{{ url_for('order_list') }}" class="btn btn-sm btn-outline-primary">View All Orders</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Popular Menu Items -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Popular Menu Items</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Orders</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in popular_items %}
+                                <tr>
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.category }}</td>
+                                    <td>${{ item.price }}</td>
+                                    <td>{{ item.order_count }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{{ url_for('menu_list') }}" class="btn btn-sm btn-outline-primary">View All Menu Items</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

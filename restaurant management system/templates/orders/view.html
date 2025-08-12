@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.id }} - Restaurant Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Order #{{ order.id }}</h2>
+        <div>
+            {% if order.status == 'in_progress' %}
+            <a href="{{ url_for('order_add_item', id=order.id) }}" class="btn btn-success me-2">
+                <i class="fas fa-plus me-2"></i>Add Item
+            </a>
+            <div class="btn-group" role="group">
+                <form action="{{ url_for('order_complete', id=order.id) }}" method="POST" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-check me-2"></i>Complete Order
+                    </button>
+                </form>
+                <form action="{{ url_for('order_cancel', id=order.id) }}" method="POST" style="display: inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times me-2"></i>Cancel Order
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Order Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Status:</th>
+                            <td>
+                                {% if order.status == 'completed' %}
+                                    <span class="badge bg-success">Completed</span>
+                                {% elif order.status == 'in_progress' %}
+                                    <span class="badge bg-warning">In Progress</span>
+                                {% elif order.status == 'cancelled' %}
+                                    <span class="badge bg-danger">Cancelled</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ order.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Created:</th>
+                            <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% if order.completed_at %}
+                        <tr>
+                            <th>Completed:</th>
+                            <td>{{ order.completed_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Table:</th>
+                            <td>{{ order.table.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Total Amount:</th>
+                            <td>${{ order.total_amount }}</td>
+                        </tr>
+                        {% if order.notes %}
+                        <tr>
+                            <th>Notes:</th>
+                            <td>{{ order.notes }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Customer Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>Name:</th>
+                            <td>{{ order.customer.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ order.customer.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone:</th>
+                            <td>{{ order.customer.phone }}</td>
+                        </tr>
+                        {% if order.customer.address %}
+                        <tr>
+                            <th>Address:</th>
+                            <td>{{ order.customer.address }}</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Order Items</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                    {% if order.status == 'in_progress' %}
+                                    <th>Actions</th>
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.order_items %}
+                                <tr>
+                                    <td>{{ item.menu_item.name }}</td>
+                                    <td>{{ item.menu_item.category }}</td>
+                                    <td>${{ item.price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>${{ item.price * item.quantity }}</td>
+                                    {% if order.status == 'in_progress' %}
+                                    <td>
+                                        <form action="{{ url_for('order_remove_item', order_id=order.id, item_id=item.id) }}" method="POST" style="display: inline;">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="{% if order.status == 'in_progress' %}6{% else %}5{% endif %}" class="text-center">No items in this order</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4" class="text-end">Total:</th>
+                                    <th>${{ order.total_amount }}</th>
+                                    {% if order.status == 'in_progress' %}
+                                    <th></th>
+                                    {% endif %}
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ url_for('order_list') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Orders
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Tables - Restaurant Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Tables</h2>
+        <a href="{{ url_for('table_add') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add Table
+        </a>
+    </div>
+    
+    <div class="row">
+        {% for table in tables %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 {% if table.status == 'occupied' %}border-danger{% elif table.status == 'reserved' %}border-warning{% else %}border-success{% endif %}">
+                <div class="card-header {% if table.status == 'occupied' %}bg-danger text-white{% elif table.status == 'reserved' %}bg-warning{% else %}bg-success text-white{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Table {{ table.table_number }}</h5>
+                        <span class="badge bg-light text-dark">{{ table.capacity }} seats</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>Status:</strong>
+                        {% if table.status == 'available' %}
+                            <span class="text-success">Available</span>
+                        {% elif table.status == 'occupied' %}
+                            <span class="text-danger">Occupied</span>
+                        {% elif table.status == 'reserved' %}
+                            <span class="text-warning">Reserved</span>
+                        {% endif %}
+                    </p>
+                    {% if table.status == 'occupied' %}
+                        <p class="card-text">
+                            <small class="text-muted">Table is currently in use</small>
+                        </p>
+                    {% elif table.status == 'reserved' %}
+                        <p class="card-text">
+                            <small class="text-muted">Table is reserved</small>
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group w-100" role="group">
+                        <a href="{{ url_for('table_edit', id=table.id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        {% if table.status == 'available' %}
+                        <a href="{{ url_for('order_add') }}" class="btn btn-sm btn-outline-success">
+                            <i class="fas fa-plus"></i> New Order
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No tables found. Click the "Add Table" button to create your first table.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
