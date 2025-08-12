@@ -26,6 +26,9 @@ operational metrics, and worked on the init_db.py script to integrate MySQL with
 Flask seamlessly.
 
 
+<img width="3840" height="2739" alt="ERD " src="https://github.com/user-attachments/assets/17e4302b-1c7c-4f7f-8b26-099b196239a2" />
+
+
 A comprehensive restaurant management system built with Python Flask and MySQL, designed to help restaurant owners manage their menu, orders, tables, and customers efficiently.
 
 ## Features
